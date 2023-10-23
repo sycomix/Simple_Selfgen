@@ -26,20 +26,15 @@ def create_empty_module(module_name, ini_dir):
 	os.chdir(ini_dir)
 
 def get_unlabelled_dict(labelled_list, target_label):
-	for pos, ele in enumerate(labelled_list):
+	for ele in labelled_list:
 		if ele[0] == target_label:
-			mod_desc = {}
-			for mod,desc in ele[1].items():
-				mod_desc[mod] = desc
-			return mod_desc
+			return dict(ele[1].items())
 
 def get_unlabelled_list(labelled_list, target_label):
 	unlabelled_list = []
 	for pos, ele in enumerate(labelled_list):
 		if ele[0] == target_label:
-			for e in labelled_list[pos]:
-				if e != target_label:
-					unlabelled_list.append(e)
+			unlabelled_list.extend(e for e in labelled_list[pos] if e != target_label)
 			return unlabelled_list
 
 def write_snippet_to_file(filename,path,snippet):
@@ -62,30 +57,31 @@ def trunc_file(filename, path):
 		f.truncate(0)
 
 def write_to_file(filename,path,content, access_mode):
-	if len(content) > 0:
-		print("-"*40)
-		path_to_file = Path(path,filename)
-		ext = path_to_file.name.split(".")[1]
-		full_path=os.path.join(path, filename)
-		if ext == "py" or ext == "log":
-			if access_mode != "a":
-				#Path(full_path).write_text(f"#!/usr/bin/env python3\n\n{content}")
-				Path(full_path).write_text(content)
-			else:
-				with Path(full_path).open(access_mode) as f:
-					f.write(content)
+	if len(content) <= 0:
+		return
+	print("-"*40)
+	path_to_file = Path(path,filename)
+	ext = path_to_file.name.split(".")[1]
+	full_path=os.path.join(path, filename)
+	if ext in ["py", "log"]:
+		if access_mode != "a":
+			#Path(full_path).write_text(f"#!/usr/bin/env python3\n\n{content}")
+			Path(full_path).write_text(content)
+		else:
+			with Path(full_path).open(access_mode) as f:
+				f.write(content)
 
-			if ext == "py":
-				comm = ["sudo", "chmod", "+x", full_path]
-				subprocess.run(comm)
-				print(f"Executed command {comm}")
-				print("-"*40); print()
-				print(f"\033[43mCode saved to module file {full_path}\033[0m")
-		elif ext == "json":
-			#overwrite only
-			with Path(full_path).open("w") as target: 
-				json.dump(content, target)
-				print(); print(f"\033[43mResponse saved to JSON file {full_path}\033[0m")
+		if ext == "py":
+			comm = ["sudo", "chmod", "+x", full_path]
+			subprocess.run(comm)
+			print(f"Executed command {comm}")
+			print("-"*40); print()
+			print(f"\033[43mCode saved to module file {full_path}\033[0m")
+	elif ext == "json":
+		#overwrite only
+		with Path(full_path).open("w") as target: 
+			json.dump(content, target)
+			print(); print(f"\033[43mResponse saved to JSON file {full_path}\033[0m")
 
 def get_dict_value_save_to_file(gpt_response, ini_dir, filename, header=""):
 	print(); print("-"*40)
@@ -118,13 +114,14 @@ def version_file(path_original_fn, original_fn, path_dest_fn):
 		else:
 			break
 
-	print(); print("-" * 40); print()
+	print()
+	print("-" * 40)
+	print()
 	try:
 		shutil.copy(original_full_path_fn, destination_full_name)
 		print(f"\033[43mVersion saved: {destination_full_name}\033[0m")
 	except FileNotFoundError as e:
 		print(f"\033[43mNo versioning at this point.\033[0m")
-		pass
 
 def read_file_stored_to_buffer(filename, path):
 	full_path = os.path.join(path, filename)
@@ -144,8 +141,7 @@ def print_json_on_screen(json_data):
 	print(json.dumps(json_data, indent=2, separators=(',', ':')))
 
 def insert_script_in_json(a_script):
-	script_dict = {"module": a_script}
-	return script_dict
+	return {"module": a_script}
 
 def delete_all_dir_files(target_dir):
 	#del all project module files
@@ -162,14 +158,12 @@ def create_dir(target_dir):
 def validate_filepath(full_path_to_script):
 	if not os.path.isfile(full_path_to_script):
 		print(f"\033[1;31m[ERROR]\033[0m Cannot Find File {full_path_to_script}\033[0m")
-		return False
 	else:
 		print("File Found.")
 		if os.access(full_path_to_script, os.R_OK):
 			return True
-		else:
-			print(f"\033[1;31m[ERROR]\033[0m File {full_path_to_script} not readable\033[0m")
-			return False
+		print(f"\033[1;31m[ERROR]\033[0m File {full_path_to_script} not readable\033[0m")
+	return False
 
 
 

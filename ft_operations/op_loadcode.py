@@ -18,7 +18,7 @@ class Op_Loadcode:
         full_path_to_script = self.common_instance.get_file_path_from_user(mssg)
 
         print()
-        mssg = f"Enter Short Program Description (used for requests): "
+        mssg = "Enter Short Program Description (used for requests): "
         self.common_instance.program_description = self.common_instance.user_interaction_instance.request_input_from_user(mssg)
 
         # call common

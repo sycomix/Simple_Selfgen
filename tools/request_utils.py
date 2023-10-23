@@ -25,16 +25,11 @@ def get_response_value_for_key(gpt_response, key):
     return gpt_response[key]
 
 def count_values_for_keycontain(gpt_response, thiskeycontain):
-    count = 0
-    for k, v in gpt_response.items():
-        if thiskeycontain in k:
-            count += 1
-    return count
+    return sum(1 for k, v in gpt_response.items() if thiskeycontain in k)
 
 #concatinate dict values to a string
 def concat_dict_to_string(mydict):
-    all_concat_values = "\n\n".join(this_value for this_value in mydict.values())
-    return all_concat_values
+    return "\n\n".join(mydict.values())
 
 def token_limit(tokens_used_snapshot):
     if tokens_used_snapshot >= config.token_limit:

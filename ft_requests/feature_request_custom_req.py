@@ -18,17 +18,18 @@ class Feature_Request_CustomRequest:
 	def prerequest_args_process(self):
 		# send additional requests, not back to menu
 		# get user custom request
-		print(); print(f"\033[44;97mJob: Run Code With Custom Prompt.\033[0m")
+		print()
+		print(f"\033[44;97mJob: Run Code With Custom Prompt.\033[0m")
 		print(
 			f"\n\033[1;31m[WARNING]\033[0m A custom request requires that code has been loaded.\033[0m")
 		print()
 		# update custom json request
 		prog_desc_choice = "y"
 		if self.common_instance.program_description is None:
-			print(f"No program description available but one is required.")
+			print("No program description available but one is required.")
 		else:
 			mssg = f"Current Program Description: {self.common_instance.program_description}. Update? y/n: "
-			mssg_option3 = f"Invalid choice. "
+			mssg_option3 = "Invalid choice. "
 			prog_desc_choice = self.common_instance.user_interaction_instance.user_choice_two_options(mssg=mssg, mssg_option1=None, mssg_option2=None, mssg_option3=mssg_option3)
 		if prog_desc_choice == "y":
 			self.common_instance.program_description = self.common_instance.user_interaction_instance.request_input_from_user(
@@ -45,8 +46,8 @@ class Feature_Request_CustomRequest:
 	def prepare_request_args(self):
 		#build args
 		summary_new_request = "Send a custom request to be applied on the code."
-		sys_mssg = c_r.sys_mssg + ". " + self.custom_sys_req_input
-		json_required_format = '''JSON Object Template:''' + c_r.json_required_format
+		sys_mssg = f"{c_r.sys_mssg}. {self.custom_sys_req_input}"
+		json_required_format = f'''JSON Object Template:{c_r.json_required_format}'''
 		request_to_gpt = str("Your job for this request: " + self.custom_conv_req_input.replace("\n","") + ". "
 		+ f"This is the description of what the program does in the the code found in the value for key 'module' of the JSON object':{self.common_instance.program_description}."
 		+ f"You will make specific changes to this JSON object: {self.common_instance.gpt_response}."

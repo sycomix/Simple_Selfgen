@@ -4,7 +4,9 @@ class User_Interaction:
 
     #user request choice
     def request_menu(self, choice=None):
-        print(); print("-"*40); print()
+        print()
+        print("-"*40)
+        print()
         #model generates the code according to user description
         print("1.  Generate Raw Code")
         print(f"\tRequest model for code according to a description you provide.")
@@ -33,9 +35,9 @@ class User_Interaction:
                 case _:
                     if choice.isdigit() and 1 <= int(choice) <= 12:
                         return choice
-                    else:
-                        print(); print(f"\033[41mInvalid Option\033[0m")
-                        choice = None
+                    print()
+                    print(f"\033[41mInvalid Option\033[0m")
+                    choice = None
 
     @staticmethod
     def broken_json_user_action():

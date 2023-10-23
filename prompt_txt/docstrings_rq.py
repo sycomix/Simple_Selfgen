@@ -12,7 +12,7 @@ You must validate the JSON object construct in your response for syntax. Do not 
 You ensure parsing the JSON object in your response using {config.program_language}'s built-in JSON module would not raise an error exception.
 '''
 #Multi-line strings within the code must be enclosed in triple quotes.
-gpt_task = f'''Specifications for your Task to add docstrings to the script:
+gpt_task = '''Specifications for your Task to add docstrings to the script:
 Purpose: Every function, class, and module should start with a concise summary of its purpose or behavior. This should be a brief, one-line explanation.
 Parameters: For functions or methods, describe each input parameter (name and expected type), explaining what it represents and any assumptions or constraints about its value.
 Return Value: Describe the type and meaning of the value returned by the function or method. If the function doesn't return anything (returns None), this should also be mentioned.

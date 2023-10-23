@@ -59,9 +59,12 @@ class Feature_Common:
             if oai.used_api == oai.Model_API.AZURE_OPENAI_API:
                 if self.model[1] == 'gpt-3.5-turbo-0301':
                     system_message = {"role": "system", "content": sys_mssg}
-                    this_conversation.append(system_message)
-                    # request requirements
-                    this_conversation.append({"role": "user", "content": request_to_gpt})
+                    this_conversation.extend(
+                        (
+                            system_message,
+                            {"role": "user", "content": request_to_gpt},
+                        )
+                    )
                     request_tokens = this_conversation_tokens = ut.num_tokens_from_messages(this_conversation)
                     ut.token_limit(request_tokens)
                     self.cum_tokens += this_conversation_tokens
@@ -76,7 +79,7 @@ class Feature_Common:
                     clean_response = response['choices'][0]['message']['content'].replace("'''", "'").replace('"""','"').replace('```', '`')
                     this_conversation.append({"role": "assistant", "content": response['choices'][0]['message']['content']})
 
-                elif self.model[1] == 'code-davinci-002' or self.model[1] == 'text-davinci-003':
+                elif self.model[1] in ['code-davinci-002', 'text-davinci-003']:
                     model_prompt = f"#####Fix bugs in the below module\n###Buggy {config.program_language}\n{ut.get_response_value_for_key(self.gpt_response, config.code_key_in_json)}###Fixed {config.program_language}"
 
                     this_conversation.append({"role": "user", "content": model_prompt})
@@ -97,9 +100,6 @@ class Feature_Common:
                             clean_response = json.dumps({"module":choice.text}) #string
                             this_conversation.append({"role": "assistant", "content": choice.text})
 
-            elif oai.used_api == oai.Model_API.OPENAI_API:
-                #TODO
-                pass
         except Exception as e:
             print(f"OpenAI API returned an API Error:\n{e}")
 
@@ -145,8 +145,7 @@ class Feature_Common:
         print(f"\033[1;97mModel Settings:\033[0m Engine: {self.model[1]}, Temperature: {self.model_temp}")
 
     def build_request_args(self, summary_new_request, sys_mssg, request_to_gpt):
-        args_tpl = (summary_new_request, sys_mssg, request_to_gpt)
-        return args_tpl
+        return summary_new_request, sys_mssg, request_to_gpt
 
     # manage request
     def request_code_enhancement(self, request_args):
@@ -178,7 +177,7 @@ class Feature_Common:
 
     @staticmethod
     def read_code_from_file(full_path_to_script):
-        # read script
-        code = fm.read_file_stored_to_buffer(os.path.basename(full_path_to_script),
-                                             os.path.dirname(full_path_to_script))
-        return code
+        return fm.read_file_stored_to_buffer(
+            os.path.basename(full_path_to_script),
+            os.path.dirname(full_path_to_script),
+        )

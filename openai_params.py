@@ -6,7 +6,6 @@ from creds.self_config import self_config_openai_api
 
 import openai
 
-#api enum
 class Model_API:
     #avaialble APIs
     AZURE_OPENAI_API=0
@@ -40,9 +39,6 @@ elif used_api == Model_API.OPENAI_API:
     openai.api_key = self_config_openai_api['OPENAI_API_KEY']
 
     temperature = 0.7
-else:
-    pass
-
 #set model
 deployment_name = primary_engine_deployment_name
 #print("***",deployment_name,openai.api_key,openai.organization)

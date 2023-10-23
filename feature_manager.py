@@ -76,41 +76,43 @@ class Feature_Manager:
 				self.reset_vars_end_process()
 
 	def handle_menu_choice(self):
-		if self.feature_common_instance.gpt_response is None and (self.menu_choice != '1' and self.menu_choice != '2'):
+		if (
+			self.feature_common_instance.gpt_response is None
+			and self.menu_choice not in ['1', '2']
+		):
 			return
-		else:
-			while True:
-				if self.menu_choice in self.menu_feature_choices:
-					if self.pre_request_complete is False:
-						self.pre_request_complete = self.feature_instance.prerequest_args_process()
+		while True:
+			if self.menu_choice in self.menu_feature_choices:
+				if self.pre_request_complete is False:
+					self.pre_request_complete = self.feature_instance.prerequest_args_process()
 
-					if self.pre_request_complete and self.prepare_args_complete is False:
-						self.args = self.feature_instance.prepare_request_args()
-						if self.args:
-							self.prepare_args_complete = True
+				if self.pre_request_complete and self.prepare_args_complete is False:
+					self.args = self.feature_instance.prepare_request_args()
+					if self.args:
+						self.prepare_args_complete = True
 
-					if self.prepare_args_complete and self.send_request_complete is False:
-						self.send_request_complete = self.feature_instance.request_code(self.args)
+				if self.prepare_args_complete and self.send_request_complete is False:
+					self.send_request_complete = self.feature_instance.request_code(self.args)
 
-						if not self.send_request_complete:
-							if self.user_interaction_instance.broken_json_user_action():
-								# user choice to request code from model again
-								print("JSON IS BROKEN, send request again.")
-								continue
+					if not self.send_request_complete:
+						if self.user_interaction_instance.broken_json_user_action():
+							# user choice to request code from model again
+							print("JSON IS BROKEN, send request again.")
+							continue
 
-				if self.menu_choice in self.menu_op_choices:
-					run_op_completed = self.feature_instance.run_operation()
+			if self.menu_choice in self.menu_op_choices:
+				run_op_completed = self.feature_instance.run_operation()
 
-					if not run_op_completed:
-						break
-				if self.feature_common_instance.gpt_response is not None:
-					self.process_valid_response()
+				if not run_op_completed:
+					break
+			if self.feature_common_instance.gpt_response is not None:
+				self.process_valid_response()
 
-				break
+			break
 
 	def get_sequence(self):
+		mssg = "Provide number sequence in menu execution separated by commas: "
 		while True:
-			mssg = "Provide number sequence in menu execution separated by commas: "
 			user_seq = self.user_interaction_instance.request_input_from_user(mssg)
 			numbers = []
 

@@ -4,7 +4,7 @@ import os
 import json
 
 #read config_dir data
-path_to_file = os.getcwd()+"/config_dir/config.json"
+path_to_file = f"{os.getcwd()}/config_dir/config.json"
 with open(path_to_file) as f:
     config_data = json.load(f)
 

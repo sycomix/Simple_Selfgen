@@ -16,7 +16,7 @@ according to {config.program_language}'s built-in JSON module.
 
 #It is very important you do not nest or define the test case unittest.TestCase function inside any other function.
 
-gpt_task = f'''You should know the code for a program is the value in the JSON Object's key 'module.
+gpt_task = '''You should know the code for a program is the value in the JSON Object's key 'module.
 Your Task:
 (a) Each unittest function you find in the code has a name that is a key in the JSON Object Template with name 'unittest_cli_' with ascending numbers for each starting at 1.
 You will replace the value of the unittest_cli_ keys in the JSON object with its corresponding linux cli command to execute the unittest function.

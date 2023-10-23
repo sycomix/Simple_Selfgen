@@ -14,7 +14,7 @@ Do not enclose anything either at the beginning or the end in the JSON Object wi
 Do not use multi-line in the code you create. Escape every special character in the code for json.load to read the JSON object correctly.
 '''
 #Multi-line strings within the code must be enclosed in triple quotes.
-gpt_task = f'''Your Task:
+gpt_task = '''Your Task:
 (1) add argparse arguments functionality for the program to run to the code found in this JSON object's value for key 'module' 
 without leaving no spaces from the beginning to the first character inserted.
 (2) Important: Do not include required=True in argparse's add_argument(), e.g. parser.add_argument('num1', type=float, help='First number').
